@@ -11,7 +11,7 @@ require_once 'head.php';
     ?>
 
     <div class="container d-flex justify-content-center">
-        <form class="w-50" method="POST" action="./controllers/registerController.php">
+        <form class="w-50" method="POST" action="./controllers/registerController.php" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Email</label>
                 <input name="email" type="email" class="form-control" placeholder="Email">
@@ -30,7 +30,7 @@ require_once 'head.php';
             </div>
             <div class="form-group">
                 <label>Photo</label>
-                <input name="photo" type="file" class="form-control">
+                <input name="avatar" type="file" class="form-control">
             </div>
             <div class="form-group">
                 <label>Role</label>

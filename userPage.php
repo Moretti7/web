@@ -9,12 +9,12 @@ require_once './controllers/userPageController.php';
 ?>
 
 <body>
-    <div class="container d-flex justify-content-center">
+    <div class="container d-flex justify-content-center mt-3">
         <div class="container col-3">
-            <img src="<?php echo $user->getPhoto();?>">
+            <img class="avatar" src="<?php echo $user->getPhoto();?>">
         </div>
         <div class="container d-flex justify-content-center col-9">
-            <form class="w-50" method="POST" action="./controllers/updateController.php">
+            <form class="w-50" method="POST" action="./controllers/updateController.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Email</label>
                     <input name="email" value="<?php echo $user->getEmail();?>" type="email" class="form-control" placeholder="Email">
@@ -32,8 +32,36 @@ require_once './controllers/userPageController.php';
                     <input name="surname" value="<?php echo $user->getLastname();?>" type="text" class="form-control" pattern="[^\W\d]+" title="Only letters" placeholder="Surname">
                     <input type="hidden" name="user" value="<?php echo $_GET['user']?>">
                 </div>
-                <button type="submit" class="btn btn-primary ml-3">Save</button>
+                <?php
+                if(isset($_SESSION["user"]) && $_SESSION["user"]->getId() == $_GET['user']) {
+                    echo '<div class="form-group">';
+                    echo '<label>Photo</label>';
+                    echo '<input name="avatar" type="file" class="form-control">';
+                    echo '</div>';
+                }
+                if(isset($_SESSION["user"]) && $_SESSION["user"]->getRole() == 'admin') {
+                    echo '<div class="form-group">';
+                        echo '<label>Role</label>';
+                        echo '<select name="role" class="form-control">';
+                            echo '<option selected value="user">User</option>';
+                            echo '<option value="admin">Admin</option>';
+                        echo '</select>';
+                    echo '</div>';
+                }
+
+                if(isset($_SESSION["user"]) && $_SESSION["user"]->getId() == $_GET['user'] || $_SESSION["user"]->getRole() == 'admin') {
+                    echo '<button type="submit" class="btn btn-primary ml-3">Save</button>';
+                }
+                ?>
             </form>
+                <?php 
+                if(isset($_SESSION["user"]) && $_SESSION["user"]->getRole() == 'admin') {
+                    echo '<form action="./controllers/deleteUser.php" method="POST">';
+                    echo '<input type="hidden" name="user" value="' . $_GET['user'].'">';
+                    echo '<input type="submit" class="btn btn-danger" value="Delete">';
+                    echo '</form>';
+                }
+                ?>
         </div>
     </div>
 </body>
