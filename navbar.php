@@ -11,7 +11,7 @@
           session_start();
           if (isset($_SESSION['user'])) {
             $user = $_SESSION['user'];
-            echo $user->getFirstname().' '.$user->getLastname();
+            echo '<a href="/profile.php">'.$user->getFirstname().' '.$user->getLastname().'</a>';
           }
           ?>
       </div>

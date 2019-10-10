@@ -22,7 +22,7 @@ require_once './navbar.php';
     <?php
       for ($i=0; $i < count($users); $i++) { 
         echo '<tr>';
-          echo '<td>'.$users[$i]->getId().'</td>';
+          echo '<td><a href="/userPage.php?user='.$users[$i]->getId().'">'.$users[$i]->getId().'</td>';
           echo '<td>'.$users[$i]->getFirstName().'</td>';
           echo '<td>'.$users[$i]->getLastName().'</td>';
           echo '<td>'.$users[$i]->getEmail().'</td>';
