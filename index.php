@@ -18,22 +18,14 @@ require_once './navbar.php';
       <th scope="col">Role</th>
     </tr>
   </thead>
-  <tbody>
-    <?php
-      for ($i=0; $i < count($users); $i++) { 
-        echo '<tr>';
-          echo '<td><a href="/userPage.php?user='.$users[$i]->getId().'">'.$users[$i]->getId().'</td>';
-          echo '<td>'.$users[$i]->getFirstName().'</td>';
-          echo '<td>'.$users[$i]->getLastName().'</td>';
-          echo '<td>'.$users[$i]->getEmail().'</td>';
-          echo '<td>'.$users[$i]->getRole().'</td>';
-        echo '</tr>';
-      }
-    ?>
+  <tbody class="table-body">
   </tbody>
 </table>
 <?php
 require_once './scripts.php';
 ?>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="./public/scripts/index.js"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@
         $user["password"] = $row["password"];
         $user["email"] = $row["email"];
         $user["photo"] = $row["photo"];
-        $user["title"] = $row["title"];
+        $user["role"] = $row["title"];
 
         array_push($response, $user);
     }
