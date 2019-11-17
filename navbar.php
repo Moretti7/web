@@ -18,10 +18,13 @@
 
       <?php
         if (isset($_SESSION['user'])) {
-            echo '<a href="./controllers/logoutController.php" class="btn btn-primary">Logout</a>';
+            // echo '<a href="./controllers/logoutController.php" class="btn btn-primary">Logout</a>';
+            // echo '<button class="btn btn-primary">Logout</button>';
         } else {
-            echo '<a href="./register.php" class="btn btn-primary mr-3">Register</a>';
-            echo '<a href="./login.php" class="btn btn-primary">Login</a>';
+            // echo '<a href="./register.php" class="btn btn-primary mr-3 register-button">Register</a>';
+            // echo '<button class="btn btn-primary mr-3 register-button">Register</button>';
+            // echo '<a href="./login.php" class="btn btn-primary login-button">Login</a>';
+            // echo '<button class="btn btn-primary login-button">Login</button>';
         }
       ?>
   </div>
