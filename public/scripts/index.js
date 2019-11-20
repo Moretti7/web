@@ -83,41 +83,60 @@ function showDeleteButton(logginedUser, userId) {
 function showSaveButton(logginedUser, id) {
     if (logginedUser.role != 'admin' && logginedUser.id != id) {
         if (!document.querySelector('.user-save-button').classList.contains('hide')) {
-            document.querySelector('.user-save-button').add('hide');
+            document.querySelector('.user-save-button').classList.add('hide');
         }
     }
     else {
         if (document.querySelector('.user-save-button').classList.contains('hide')) {
-            document.querySelector('.user-save-button').remove('hide');
+            document.querySelector('.user-save-button').classList.remove('hide');
         }
     }
 
     document.querySelector('.user-save-button').onclick = () => {
-        let email = document.querySelector('.user-email').value;
-        let password = document.querySelector('.user-password').value;
-        let name = document.querySelector('.first-name').value;
-        let surname = document.querySelector('.last-name').value;
-        let avatar = document.querySelector('.user-avatar').files[0];
-        let role = document.querySelector('.user-role').value;
-        clearRegisterForm();
-        let form = new FormData();
-        form.append('email', email);
-        form.append('password', password);
-        form.append('name', name);
-        form.append('surname', surname);
-        form.append('avatar', avatar);
-        form.append('role', role);
+        let data = prepareDataForUpdate(id);
         
         ajax({
             url: `/api/user.php`,
             method: 'PUT',
-            data: form,
+            data: data,
             contentType: 'application/x-www-form-urlencoded',
             success: (response) => {
                 loadUsers();
                 toggleUserData('.user-popup');
             }
         })
+    }
+}
+
+function prepareDataForUpdate(id) {
+    let email = document.querySelector('.user-email').value;
+    let password = document.querySelector('.user-password').value;
+    let name = document.querySelector('.first-name').value;
+    let surname = document.querySelector('.last-name').value;
+    let role = document.querySelector('.user-role').value;
+
+    clearRegisterForm();
+    
+    let data = `id=${id}&`;
+
+    ifNotUndefined(email,    () => data += `email=${email}&`);
+    ifNotUndefined(password, () => data += `password=${password}&`);
+    ifNotUndefined(name,     () => data += `name=${name}&`);
+    ifNotUndefined(surname,  () => data += `surname=${surname}&`);
+    ifNotUndefined(role,     () => data += `role=${role}`);
+
+    // form.append('email', email);
+    // form.append('password', password);
+    // form.append('name', name);
+    // form.append('surname', surname);
+    // form.append('avatar', avatar);
+    // form.append('role', role);
+    return data;
+}
+
+function ifNotUndefined(element, func) {
+    if (element !== undefined) {
+        func();
     }
 }
 

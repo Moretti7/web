@@ -55,7 +55,6 @@ switch($_SERVER['REQUEST_METHOD']) {
         $password = $_POST['password'];
         $role = $_POST['role'] == 'admin' ? 2 : 1;
         
-        
         $dir = "../public/images";
         $filename = $_FILES["avatar"]["name"];
         $path = $dir . "/" . $filename;
@@ -68,7 +67,37 @@ switch($_SERVER['REQUEST_METHOD']) {
     case 'PUT':
         $params = array();
         parse_str(file_get_contents('php://input'), $params);
-        echo json_encode($params);
+        
+        $sql = "UPDATE users SET ";
+
+        if(isset($params['email'])) {
+            $email = $params['email'];
+            $sql = $sql . 'email = "' . $email . '", ';
+        }
+
+        if(isset($params['name'])) {
+            $name = $params['name'];
+            $sql = $sql . 'first_name = "' . $name . '", ';
+        }
+
+        if(isset($params['surname'])) {
+            $surname = $params['surname'];
+            $sql = $sql . 'last_name = "' . $surname .'", ';
+        }
+
+        if(isset($params['password'])) {
+            $password = $params['password'];
+            $sql = $sql . 'password = "' . $password.'", ';
+        }
+
+        $role = $params['role'] == 'admin' ? 2 : 1;
+        $id = $params['id'];
+        $sql = $sql . 'role_id = ' . $role . ' WHERE id ='. $id .';';
+
+        echo $sql;
+
+        $conn->query($sql);
+
         break;
     case 'DELETE':
         $params = array();
