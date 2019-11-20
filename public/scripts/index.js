@@ -13,20 +13,168 @@ function loadUsers() {
             users.forEach(user => {
                 document.querySelector('.table-body').innerHTML +=
                 `<tr>
-                    <td><a href="/userPage.php?user=${user.id}">${user.id}</td>
+                    <td class="user-id">${user.id}</td>
                     <td>${user.first_name}</td>
                     <td>${user.last_name}</td>
                     <td>${user.email}</td>
                     <td>${user.role}</td>
                 </tr>`;
+                initId();
             })
         }
     })
 }
 
-loadUsers();
 
+function initId() {
+    document.querySelectorAll('.user-id').forEach(id => {
+        id.addEventListener('click', (event) => {
+            let id = event.target.innerHTML;
+            ajax({
+                method: 'GET',
+                url: `/api/user.php?id=${id}`,
+                success: (response) => {
+                    let user = JSON.parse(response);
+                    let userPopup = '.user-popup';
+
+                    let logginedUser = JSON.parse(localStorage.getItem('user'));
+                    showPasswordFiled(logginedUser, id);
+                    showRoleField(logginedUser);
+                    toggleUserData(userPopup);
+                    setUserData(user);
+                    showSaveButton(logginedUser, id);
+                    showPhotoElement(logginedUser, id);
+                    showDeleteButton(logginedUser, id);
+                }
+            })
+        })
+    });
+}
+
+loadUsers();
 changeNavbar();
+
+function showDeleteButton(logginedUser, userId) {
+    if (logginedUser.role == 'admin') {
+        if (document.querySelector('.user-delete-button').classList.contains('hide')) {
+            document.querySelector('.user-delete-button').classList.remove('hide');
+        }
+    }
+    else {
+        if (!document.querySelector('.user-delete-button').classList.contains('hide')) {
+            document.querySelector('.user-delete-button').classList.add('hide');
+        }
+    }
+
+    document.querySelector('.user-delete-button').onclick = () => {
+        ajax({
+            url: `/api/user.php`,
+            method: 'DELETE',
+            data: `id=${userId}`,
+            contentType: 'application/x-www-form-urlencoded',
+            success: (response) => {
+                loadUsers();
+                toggleUserData('.user-popup');
+            }
+        })
+    }
+}
+
+function showSaveButton(logginedUser, id) {
+    if (logginedUser.role != 'admin' && logginedUser.id != id) {
+        if (!document.querySelector('.user-save-button').classList.contains('hide')) {
+            document.querySelector('.user-save-button').add('hide');
+        }
+    }
+    else {
+        if (document.querySelector('.user-save-button').classList.contains('hide')) {
+            document.querySelector('.user-save-button').remove('hide');
+        }
+    }
+
+    document.querySelector('.user-save-button').onclick = () => {
+        let email = document.querySelector('.user-email').value;
+        let password = document.querySelector('.user-password').value;
+        let name = document.querySelector('.first-name').value;
+        let surname = document.querySelector('.last-name').value;
+        let avatar = document.querySelector('.user-avatar').files[0];
+        let role = document.querySelector('.user-role').value;
+        clearRegisterForm();
+        let form = new FormData();
+        form.append('email', email);
+        form.append('password', password);
+        form.append('name', name);
+        form.append('surname', surname);
+        form.append('avatar', avatar);
+        form.append('role', role);
+        
+        ajax({
+            url: `/api/user.php`,
+            method: 'PUT',
+            data: form,
+            contentType: 'application/x-www-form-urlencoded',
+            success: (response) => {
+                loadUsers();
+                toggleUserData('.user-popup');
+            }
+        })
+    }
+}
+
+function showPhotoElement(logginedUser, id) {
+    if (logginedUser.role != 'admin' && logginedUser.id != id) {
+        if (!document.querySelector('.photo-element').classList.contains('hide')) {
+            document.querySelector('.photo-element').add('hide');
+        }
+    }
+    else {
+        if (document.querySelector('.photo-element').classList.contains('hide')) {
+            document.querySelector('.photo-element').remove('hide');
+        }
+    }
+}
+
+function setUserData(user) {
+    let email = document.querySelector('.user-email');
+    let firstName = document.querySelector('.first-name');
+    let lastName = document.querySelector('.last-name');
+    let avatar = document.querySelector('.user-avatar');
+    email.value = `${user.email}`;
+    firstName.value = `${user.firstName}`;
+    lastName.value = `${user.lastName}`;
+    avatar.src = `${user.photo}`;
+}
+
+function toggleUserData(userPopup) {
+    document.querySelector(userPopup).classList.toggle('hide');
+    document.querySelector('.content').classList.toggle('blur');
+}
+
+function showRoleField(logginedUser) {
+    if (logginedUser.role == 'admin') {
+        if (document.querySelector('.role-element').classList.contains('hide')) {
+            document.querySelector('.role-element').classList.remove('hide');
+        }
+    }
+    else {
+        if (!document.querySelector('.role-element').classList.contains('hide')) {
+            document.querySelector('.role-element').classList.add('hide');
+        }
+    }
+}
+
+function showPasswordFiled(logginedUser, id) {
+    if (logginedUser.role != 'admin' && logginedUser.id != id) {
+        if (!document.querySelector('.user-password').classList.contains('hide')) {
+            document.querySelector('.user-password').classList.add('hide');
+            document.querySelector('.password-element').classList.add('hide');
+        }
+    }
+    else if (document.querySelector('.user-password').classList.contains('hide')) {
+        document.querySelector('.user-password').classList.remove('hide');
+        document.querySelector('.password-element').classList.remove('hide');
+    }
+}
 
 function changeNavbar() {
     let user = JSON.parse(localStorage.getItem('user'));

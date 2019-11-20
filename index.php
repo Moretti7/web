@@ -78,6 +78,47 @@ require_once './scripts.php';
     </div>
   </div>
 
+  <div class="user-popup hide">
+    <div class="container d-flex justify-content-center mt-3">
+        <div class="container col-3">
+            <img class="user-avatar avatar" src="">
+        </div>
+        <div class="container d-flex justify-content-center col-9">
+            <div class="w-50">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" value="" type="email" class="form-control user-email" placeholder="Email">
+                </div>
+                <div class="form-group password-element">
+                    <label>Password</label>
+                    <input name="password" type="password" class="form-control user-password" pattern="\w+" title="Letters, numbers and '_' are allowed" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="name" value="" type="text" class="form-control first-name" pattern="[^\W\d]+" title="Only letters" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input name="surname" value="" type="text" class="form-control last-name" pattern="[^\W\d]+" title="Only letters" placeholder="Surname">
+                </div>
+                <div class="form-group photo-element">
+                  <label>Photo</label>
+                  <input name="avatar" type="file" class="form-control user-avatar">
+                </div>
+                <div class="form-group role-element">
+                    <label>Role</label>
+                    <select name="role" class="form-control user-role">
+                        <option selected value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-danger user-delete-button" value="Delete">
+                <button type="submit" class="btn btn-primary ml-3 user-save-button">Save</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="./public/scripts/index.js"></script>
 <script src="./public/scripts/buttons.js"></script>

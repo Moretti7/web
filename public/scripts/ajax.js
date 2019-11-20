@@ -6,5 +6,7 @@ function ajax(ajaxObj) {
         console.log(`Response status: ${xhr.status}`);
         ajaxObj.success(xhr.response);
     }
+    xhr.setRequestHeader('Content-Type', ajaxObj.contentType);
+    console.log(`data: ${ajaxObj.data}`);
     xhr.send(ajaxObj.data);
 }
