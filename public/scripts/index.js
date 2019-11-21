@@ -3,9 +3,34 @@ let loginButton = '.login-button';
 let submitLoggin = '.submit-login';
 let logoutButton = '.logout-button';
 
+
+
 function sort(field) {
     ajax({
         url: `/api/users.php?sort=${field}`,
+        method: 'GET',
+        success: response => {
+            document.querySelector('.table-body').innerHTML = '';
+            let users = JSON.parse(response);
+            users.forEach(user => {
+                document.querySelector('.table-body').innerHTML +=
+                `<tr>
+                    <td class="user-id">${user.id}</td>
+                    <td>${user.first_name}</td>
+                    <td>${user.last_name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                </tr>`;
+                initId();
+            })
+        }
+    })
+}
+
+function search(field, input) {
+    ifPresent(input, () => console.log(input.value))
+    ajax({
+        url: `/api/users.php?search=${field}&value=${input.value}`,
         method: 'GET',
         success: response => {
             document.querySelector('.table-body').innerHTML = '';

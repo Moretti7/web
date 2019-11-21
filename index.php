@@ -12,10 +12,15 @@ require_once './controllers/mainPageController.php';
   <table class="table table-boardered">
     <thead>
       <tr>
+        <!-- <input type="text" onchange="search('id', this)"> -->
         <th scope="col" onclick="sort('id')">ID</th>
+        <input type="text" onchange="search('first_name', this)">
         <th scope="col" onclick="sort('first_name')">First Name</th>
+        <input type="text" onchange="search('last_name', this)">
         <th scope="col" onclick="sort('last_name')">Last Name</th>
+        <input type="text" onchange="search('email', this)">
         <th scope="col" onclick="sort('email')">Email</th>
+        <input type="text" onchange="search('title', this)">
         <th scope="col" onclick="sort('title')">Role</th>
       </tr>
     </thead>
