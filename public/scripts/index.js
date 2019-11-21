@@ -312,16 +312,29 @@ function toggleLoginPopup() {
 
 function addRegisterEventListener() {
     document.querySelector('.submit-register').onclick = () => {
-        let form = prepareForm();
+        let email = document.querySelector('.register-email').value;
+        
         ajax({
-            url: '/api/user.php',
-            method: 'POST',
-            data: form,
+            url: `/api/validation.php?email=${email}`,
+            method: 'GET',
             success: (response) => {
-                console.log(response)
-                toggleRegisterPopup();
-                toggleLoginPopup();
-                loadUsers();
+                if (response == 'ok') {
+                    let form = prepareForm();
+
+                    ajax({
+                        url: '/api/user.php',
+                        method: 'POST',
+                        data: form,
+                        success: (response) => {
+                            console.log(response)
+                            toggleRegisterPopup();
+                            toggleLoginPopup();
+                            loadUsers();
+                        }
+                    })
+                } else {
+                    document.querySelector('.error-message').innerHTML = "User with this email already registered";
+                }
             }
         })
     };
@@ -334,6 +347,7 @@ function prepareForm() {
     let surname = document.querySelector('.surname').value;
     let avatar = document.querySelector('.avatar').files[0];
     let role = document.querySelector('.role').value;
+
     clearRegisterForm();
     let form = new FormData();
     form.append('email', email);

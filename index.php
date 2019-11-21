@@ -35,6 +35,7 @@ require_once './scripts.php';
   <div class="register-popup d-flex hide">
     <div class="container d-flex justify-content-center register">
       <div class="w-50">
+        <div class="error-message"></div>
           <div class="form-group">
               <label>Email</label>
               <input name="email" type="email" class="form-control register-email" placeholder="Email">
