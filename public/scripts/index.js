@@ -320,7 +320,7 @@ function addRegisterEventListener() {
             success: (response) => {
                 if (response == 'ok') {
                     let form = prepareForm();
-
+                    document.querySelector('.error-message').innerHTML = '';
                     ajax({
                         url: '/api/user.php',
                         method: 'POST',
