@@ -12,11 +12,11 @@ require_once './controllers/mainPageController.php';
   <table class="table table-boardered">
     <thead>
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Role</th>
+        <th scope="col" onclick="sort('id')">ID</th>
+        <th scope="col" onclick="sort('first_name')">First Name</th>
+        <th scope="col" onclick="sort('last_name')">Last Name</th>
+        <th scope="col" onclick="sort('email')">Email</th>
+        <th scope="col" onclick="sort('title')">Role</th>
       </tr>
     </thead>
     <tbody class="table-body">
