@@ -62,6 +62,7 @@ function showDeleteButton(logginedUser, userId) {
     }
     else {
         if (!document.querySelector('.user-delete-button').classList.contains('hide')) {
+            console.log('HIDED BUTTON')
             document.querySelector('.user-delete-button').classList.add('hide');
         }
     }
@@ -102,6 +103,15 @@ function showSaveButton(logginedUser, id) {
             contentType: 'application/x-www-form-urlencoded',
             success: (response) => {
                 loadUsers();
+                ajax({
+                    method: 'GET',
+                    url: `/api/user.php?id=${id}`,
+                    success: (response) => {
+                        let user = JSON.parse(response);
+                        localStorage.setItem('user', response);
+                        document.querySelector('.user-name').innerHTML = `${user.firstName} ${user.lastName}`;
+                    }
+                })
                 toggleUserData('.user-popup');
             }
         })
@@ -119,11 +129,11 @@ function prepareDataForUpdate(id) {
     
     let data = `id=${id}&`;
 
-    ifNotUndefined(email,    () => data += `email=${email}&`);
-    ifNotUndefined(password, () => data += `password=${password}&`);
-    ifNotUndefined(name,     () => data += `name=${name}&`);
-    ifNotUndefined(surname,  () => data += `surname=${surname}&`);
-    ifNotUndefined(role,     () => data += `role=${role}`);
+    ifPresent(email,    () => data += `email=${email}&`);
+    ifPresent(password, () => data += `password=${password}&`);
+    ifPresent(name,     () => data += `name=${name}&`);
+    ifPresent(surname,  () => data += `surname=${surname}&`);
+    ifPresent(role,     () => data += `role=${role}`);
 
     // form.append('email', email);
     // form.append('password', password);
@@ -134,8 +144,8 @@ function prepareDataForUpdate(id) {
     return data;
 }
 
-function ifNotUndefined(element, func) {
-    if (element !== undefined) {
+function ifPresent(element, func) {
+    if (element !== undefined && element != '') {
         func();
     }
 }
@@ -143,7 +153,7 @@ function ifNotUndefined(element, func) {
 function showPhotoElement(logginedUser, id) {
     if (logginedUser.role != 'admin' && logginedUser.id != id) {
         if (!document.querySelector('.photo-element').classList.contains('hide')) {
-            document.querySelector('.photo-element').add('hide');
+            document.querySelector('.photo-element').classList.add('hide');
         }
     }
     else {
