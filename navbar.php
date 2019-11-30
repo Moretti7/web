@@ -7,7 +7,7 @@
       </ul>
       <div class="user-name">
           <?php
-          require_once 'user.php';
+          require_once './model/user.php';
           session_start();
           if (isset($_SESSION['user'])) {
             $user = $_SESSION['user'];

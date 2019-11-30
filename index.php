@@ -2,7 +2,6 @@
 <html lang="en">
 <?php
 require_once './head.php';
-require_once './controllers/mainPageController.php';
 ?>
 <body>
 <div class="content">
