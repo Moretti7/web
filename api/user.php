@@ -1,6 +1,6 @@
 <?php
 require_once '../connection.php';
-require_once '../user.php';
+require_once '../model/user.php';
 
 function findUser($id, $conn) {
     $sql = "SELECT users.`id`, `first_name`, `last_name`, `password`, `email`, `photo`, `title` FROM users INNER JOIN role ON users.role_id = role.id WHERE users.id = '$id';";
