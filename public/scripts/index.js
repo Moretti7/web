@@ -7,7 +7,7 @@ let logoutButton = '.logout-button';
 
 function sort(field) {
     ajax({
-        url: `/api/users?sort=${field}`,
+        url: `/api/users.php?sort=${field}`,
         method: 'GET',
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -30,7 +30,7 @@ function sort(field) {
 function search(field, input) {
     ifPresent(input, () => console.log(input.value))
     ajax({
-        url: `/api/users?search=${field}&value=${input.value}`,
+        url: `/api/users.php?search=${field}&value=${input.value}`,
         method: 'GET',
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -52,7 +52,7 @@ function search(field, input) {
 
 function loadUsers() {
     ajax({
-        url: "/api/users",
+        url: "/api/users.php",
         method: "GET",
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -79,7 +79,7 @@ function initId() {
             let id = event.target.innerHTML;
             ajax({
                 method: 'GET',
-                url: `/api/user?id=${id}`,
+                url: `/api/user.php?id=${id}`,
                 success: (response) => {
                     let user = JSON.parse(response);
                     let userPopup = '.user-popup';
@@ -116,7 +116,7 @@ function showDeleteButton(logginedUser, userId) {
 
     document.querySelector('.user-delete-button').onclick = () => {
         ajax({
-            url: `/api/user`,
+            url: `/api/user.php`,
             method: 'DELETE',
             data: `id=${userId}`,
             contentType: 'application/x-www-form-urlencoded',
@@ -141,18 +141,17 @@ function showSaveButton(logginedUser, id) {
     }
 
     document.querySelector('.user-save-button').onclick = () => {
-        let data = prepareDataForUpdate(id);
+        let data = buildUser(id);
         
         ajax({
-            url: `/api/user`,
+            url: `/api/user.php`,
             method: 'PUT',
             data: data,
-            contentType: 'application/x-www-form-urlencoded',
             success: (response) => {
                 loadUsers();
                 ajax({
                     method: 'GET',
-                    url: `/api/user?id=${id}`,
+                    url: `/api/user.php?id=${id}`,
                     success: (response) => {
                         let user = JSON.parse(response);
                         localStorage.setItem('user', response);
@@ -163,6 +162,27 @@ function showSaveButton(logginedUser, id) {
             }
         })
     }
+}
+
+function buildUser(id) {
+    let user = {};
+    
+    user.id = id;
+    let email = document.querySelector('.user-email').value;
+    let password = document.querySelector('.user-password').value;
+    let name = document.querySelector('.first-name').value;
+    let surname = document.querySelector('.last-name').value;
+    let role = document.querySelector('.user-role').value;
+
+    clearRegisterForm();
+
+    ifPresent(email,    () => user.email = email);
+    ifPresent(password, () => user.password = password);
+    ifPresent(name,     () => user.name = name);
+    ifPresent(surname,  () => user.surname = surname);
+    ifPresent(role,     () => user.role = role);
+
+    return JSON.stringify(user);
 }
 
 function prepareDataForUpdate(id) {
@@ -182,12 +202,6 @@ function prepareDataForUpdate(id) {
     ifPresent(surname,  () => data += `surname=${surname}&`);
     ifPresent(role,     () => data += `role=${role}`);
 
-    // form.append('email', email);
-    // form.append('password', password);
-    // form.append('name', name);
-    // form.append('surname', surname);
-    // form.append('avatar', avatar);
-    // form.append('role', role);
     return data;
 }
 
@@ -240,7 +254,7 @@ function showRoleField(logginedUser) {
 }
 
 function showPasswordFiled(logginedUser, id) {
-    if (logginedUser.role != 'admin' && logginedUser.id != id) {
+    if (logginedUser != null && logginedUser.role != 'admin' && logginedUser.id != id) {
         if (!document.querySelector('.user-password').classList.contains('hide')) {
             document.querySelector('.user-password').classList.add('hide');
             document.querySelector('.password-element').classList.add('hide');
@@ -315,21 +329,28 @@ function addRegisterEventListener() {
         let email = document.querySelector('.register-email').value;
         
         ajax({
-            url: `/api/validation?email=${email}`,
+            url: `/api/validation.php?email=${email}`,
             method: 'GET',
             success: (response) => {
                 if (response == 'ok') {
                     let form = prepareForm();
                     document.querySelector('.error-message').innerHTML = '';
                     ajax({
-                        url: '/api/user',
+                        url: '/api/user/avatar.php',
                         method: 'POST',
                         data: form,
                         success: (response) => {
-                            console.log(response)
-                            toggleRegisterPopup();
-                            toggleLoginPopup();
-                            loadUsers();
+                            //send user json
+                            ajax({
+                                url: '/api/user.php',
+                                method: 'POST',
+                                data: prepareUser(JSON.parse(response).photo),
+                                success: (response) => {
+                                    toggleRegisterPopup();
+                                    toggleLoginPopup();
+                                    loadUsers();
+                                }
+                            })
                         }
                     })
                 } else {
@@ -340,22 +361,40 @@ function addRegisterEventListener() {
     };
 }
 
-function prepareForm() {
+function prepareUser(photo) {
+    let user = {};
+    user.photo = photo;
     let email = document.querySelector('.register-email').value;
     let password = document.querySelector('.register-password').value;
     let name = document.querySelector('.name').value;
     let surname = document.querySelector('.surname').value;
-    let avatar = document.querySelector('.avatar').files[0];
     let role = document.querySelector('.role').value;
 
-    clearRegisterForm();
+    user.email = email;
+    user.password = password;
+    user.name = name;
+    user.surname = surname;
+    user.role = role;
+
+    return JSON.stringify(user);
+}
+
+function prepareForm() {
+    // let email = document.querySelector('.register-email').value;
+    // let password = document.querySelector('.register-password').value;
+    // let name = document.querySelector('.name').value;
+    // let surname = document.querySelector('.surname').value;
+    let avatar = document.querySelector('.avatar').files[0];
+    // let role = document.querySelector('.role').value;
+
+    // clearRegisterForm();
     let form = new FormData();
-    form.append('email', email);
-    form.append('password', password);
-    form.append('name', name);
-    form.append('surname', surname);
+    // form.append('email', email);
+    // form.append('password', password);
+    // form.append('name', name);
+    // form.append('surname', surname);
     form.append('avatar', avatar);
-    form.append('role', role);
+    // form.append('role', role);
     return form;
 }
 function clearRegisterForm() {

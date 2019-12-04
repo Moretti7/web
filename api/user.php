@@ -49,49 +49,46 @@ switch($_SERVER['REQUEST_METHOD']) {
         }
         break;
     case 'POST':
-        $email = $_POST['email'];
-        $name = $_POST['name'];
-        $surname = $_POST['surname'];
-        $password = $_POST['password'];
-        $role = $_POST['role'] == 'admin' ? 2 : 1;
-        
-        $dir = "../public/images";
-        $filename = $_FILES["avatar"]["name"];
-        $path = $dir . "/" . $filename;
-        move_uploaded_file($_FILES["avatar"]["tmp_name"], $path);
+        $user = json_decode(file_get_contents('php://input'));
+        $email = $user->email;
+        $name = $user->name;
+        $surname = $user->surname;
+        $password = $user->password;
+        $role = $user->role == 'admin' ? 2 : 1;
+        $path = $user->photo;
+
         
         $sql = "INSERT INTO users (first_name, last_name, email, `password`, `role_id`, photo) VALUES ('$name', '$surname', '$email', '$password', '$role', '$path');";
         $conn->query($sql);
         echo 'successful';
         break;
     case 'PUT':
-        $params = array();
-        parse_str(file_get_contents('php://input'), $params);
+        $user = json_decode(file_get_contents('php://input'));
         
         $sql = "UPDATE users SET ";
 
-        if(isset($params['email'])) {
-            $email = $params['email'];
+        if(isset($user->email)) {
+            $email = $user->email;
             $sql = $sql . 'email = "' . $email . '", ';
         }
 
-        if(isset($params['name'])) {
-            $name = $params['name'];
+        if(isset($user->name)) {
+            $name = $user->name;
             $sql = $sql . 'first_name = "' . $name . '", ';
         }
 
-        if(isset($params['surname'])) {
-            $surname = $params['surname'];
+        if(isset($user->surname)) {
+            $surname = $user->surname;
             $sql = $sql . 'last_name = "' . $surname .'", ';
         }
 
-        if(isset($params['password'])) {
-            $password = $params['password'];
+        if(isset($user->password)) {
+            $password = $user->password;
             $sql = $sql . 'password = "' . $password.'", ';
         }
 
-        $role = $params['role'] == 'admin' ? 2 : 1;
-        $id = $params['id'];
+        $role = $user->role == 'admin' ? 2 : 1;
+        $id = $user->id;
         $sql = $sql . 'role_id = ' . $role . ' WHERE id ='. $id .';';
 
         echo $sql;
