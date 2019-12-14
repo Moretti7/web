@@ -1,5 +1,5 @@
 <?php
-require_once 'route/api.php';
+use route\api\Route;
 
 try {
     $api = new Route();

@@ -1,7 +1,9 @@
 <?php
-require_once 'BasicController.php';
-require_once 'Db.php';
-require_once 'Users.php';
+namespace app\Controllers;
+
+use app\Controllers\Controller;
+use app\Controllers\Db;
+use app\Controllers\Users;
 
 class UserController extends Controller
 {

@@ -1,5 +1,6 @@
 <?php
-require_once './app/Controllers/UserController.php';
+namespace route\api;
+use app\Controllers\UserController;
 
 class Route
 {

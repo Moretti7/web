@@ -1,4 +1,5 @@
 <?php
+namespace app\Controllers;
 abstract class Controller
 {
    public $apiName = ''; //users
