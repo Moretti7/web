@@ -6,7 +6,7 @@ document.querySelector(submitLoggin).addEventListener('click', (target) => {
     document.querySelector('.password-login').value = '';
     console.log("LOGINING THE USER");
     ajax({
-        url: `/api/user.php?email=${email}&password=${password}`,
+        url: `/api/user?email=${email}&password=${password}`,
         method: 'GET',
         success: (response) => {
             let user = JSON.parse(response);

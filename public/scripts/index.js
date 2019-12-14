@@ -7,7 +7,7 @@ let logoutButton = '.logout-button';
 
 function sort(field) {
     ajax({
-        url: `/api/users.php?sort=${field}`,
+        url: `/api/users?sort=${field}`,
         method: 'GET',
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -30,7 +30,7 @@ function sort(field) {
 function search(field, input) {
     ifPresent(input, () => console.log(input.value))
     ajax({
-        url: `/api/users.php?search=${field}&value=${input.value}`,
+        url: `/api/users?search=${field}&value=${input.value}`,
         method: 'GET',
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -52,7 +52,7 @@ function search(field, input) {
 
 function loadUsers() {
     ajax({
-        url: "/api/users.php",
+        url: "/api/users",
         method: "GET",
         success: response => {
             document.querySelector('.table-body').innerHTML = '';
@@ -79,7 +79,7 @@ function initId() {
             let id = event.target.innerHTML;
             ajax({
                 method: 'GET',
-                url: `/api/user.php?id=${id}`,
+                url: `/api/user?id=${id}`,
                 success: (response) => {
                     let user = JSON.parse(response);
                     let userPopup = '.user-popup';
@@ -116,7 +116,7 @@ function showDeleteButton(logginedUser, userId) {
 
     document.querySelector('.user-delete-button').onclick = () => {
         ajax({
-            url: `/api/user.php`,
+            url: `/api/user`,
             method: 'DELETE',
             data: `id=${userId}`,
             contentType: 'application/x-www-form-urlencoded',
@@ -144,14 +144,14 @@ function showSaveButton(logginedUser, id) {
         let data = buildUser(id);
         
         ajax({
-            url: `/api/user.php`,
+            url: `/api/user`,
             method: 'PUT',
             data: data,
             success: (response) => {
                 loadUsers();
                 ajax({
                     method: 'GET',
-                    url: `/api/user.php?id=${id}`,
+                    url: `/api/user?id=${id}`,
                     success: (response) => {
                         let user = JSON.parse(response);
                         localStorage.setItem('user', response);
@@ -329,20 +329,20 @@ function addRegisterEventListener() {
         let email = document.querySelector('.register-email').value;
         
         ajax({
-            url: `/api/validation.php?email=${email}`,
+            url: `/api/validation?email=${email}`,
             method: 'GET',
             success: (response) => {
                 if (response == 'ok') {
                     let form = prepareForm();
                     document.querySelector('.error-message').innerHTML = '';
                     ajax({
-                        url: '/api/user/avatar.php',
+                        url: '/api/user/avatar',
                         method: 'POST',
                         data: form,
                         success: (response) => {
                             //send user json
                             ajax({
-                                url: '/api/user.php',
+                                url: '/api/user',
                                 method: 'POST',
                                 data: prepareUser(JSON.parse(response).photo),
                                 success: (response) => {
