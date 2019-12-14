@@ -38,19 +38,14 @@ class Users
     public static function getById(mysqli $db, $userId)
     {
         $sql = "SELECT users.`id`, `first_name`, `last_name`, `password`, `email`, `title` FROM users INNER JOIN role ON users.role_id = role.id WHERE users.id = '$userId';";
-        $result = $db->query($sql);
-        $user = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $user['id'] = $row['id'];
-                $user["firstName"] = $row["first_name"];
-                $user["lastName"] = $row["last_name"];
-                $user["password"] = $row["password"];
-                $user["email"] = $row["email"];
-                $user["role"] = $row["title"];
-            }
-        }
-        return $user;
+        return self::getUser($db, $sql);
+    }
+
+    public static function login(mysqli $db, $email, $password)
+    {
+        $sql = "SELECT users.`id`, `first_name`, `last_name`, `password`, `email`, `title` 
+                FROM users INNER JOIN role ON users.role_id = role.id WHERE users.email = '$email' AND users.password = '$password';";
+        return self::getUser($db, $sql);
     }
 
     public static function update(mysqli $db, $userId, string $firstName,
@@ -69,6 +64,29 @@ class Users
         return $db->query($sql);
     }
 
+    /**
+     * @param mysqli $db
+     * @param string $sql
+     * @return array
+     */
+    public static function getUser(mysqli $db, string $sql)
+    {
+        $result = $db->query($sql);
+        $user = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $user['id'] = $row['id'];
+                $user["firstName"] = $row["first_name"];
+                $user["lastName"] = $row["last_name"];
+                $user["password"] = $row["password"];
+                $user["email"] = $row["email"];
+                $user["role"] = $row["title"];
+            }
+        }
+
+        return $user;
+    }
+
     public function saveNew()
     {
         $firstName = $this->properties['firstName'] ?? '';
@@ -79,12 +97,10 @@ class Users
         $sql = "INSERT INTO users (first_name, last_name, email, `password`, `role_id`) VALUES ('$firstName', '$lastName', '$email', '$password', $roleId);";
         $this->db->query($sql);
 
-        $to = "ahdjhadkjhad@yopmail.com\n";
         $subject = "test-mail\n";
-        $message = "Test message from php mail\n";
+        $message = "Test message from php mail";
 
-        mail($to, $subject, $message);
-
+//        $result = mail($email, $subject, $message);
         return $this;
     }
 

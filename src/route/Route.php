@@ -2,6 +2,7 @@
 
 namespace route;
 
+use app\Controllers\AuthController;
 use app\Controllers\UserController;
 
 class Route
@@ -43,9 +44,14 @@ class Route
         }
 
         $request = array_shift($this->requestUri);
+        $request = explode('?', $request)[0];
+//        echo "request = $request\n\n\n\n\n\n";
         switch ($request) {
             case 'users':
                 $controller = new UserController($this->method, $this->requestParams);
+                break;
+            case 'login':
+                $controller = new AuthController($this->method, $this->requestParams);
                 break;
             default:
                 $controller = new UserController($this->method, $this->requestParams);
