@@ -1,8 +1,13 @@
 <?php
+
 namespace app\Controllers;
 
-class Db {
-    function getConnect() {
+use mysqli;
+
+class Db
+{
+    function getConnect()
+    {
         $servername = "localhost";
         $username = "root";
         $password = "";

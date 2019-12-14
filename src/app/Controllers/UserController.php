@@ -1,11 +1,8 @@
 <?php
+
 namespace app\Controllers;
 
-use app\Controllers\Controller;
-use app\Controllers\Db;
-use app\Controllers\Users;
-
-class UserController extends Controller
+class UserController extends BasicController
 {
     public $apiName = 'users';
 
@@ -42,7 +39,7 @@ class UserController extends Controller
             return $this->response($user, 200);
         }
         return $this->response('Data not found', 404);
-   }
+    }
 
     /**
      * Метод POST

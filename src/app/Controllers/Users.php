@@ -1,5 +1,8 @@
 <?php
+
 namespace app\Controllers;
+
+use mysqli;
 
 class Users
 {
@@ -38,7 +41,7 @@ class Users
         $result = $db->query($sql);
         $user = [];
         if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch_assoc()) {
                 $user['id'] = $row['id'];
                 $user["firstName"] = $row["first_name"];
                 $user["lastName"] = $row["last_name"];
