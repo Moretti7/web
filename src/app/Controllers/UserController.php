@@ -50,15 +50,17 @@ class UserController extends BasicController
     public function create()
     {
         $firstName = $this->requestParams['firstName'] ?? '';
-        $lastName = $this->requestParams['$lastName'] ?? '';
+        $lastName = $this->requestParams['lastName'] ?? '';
         $email = $this->requestParams['email'] ?? '';
         $password = $this->requestParams['password'] ?? '';
+        $role = $this->requestParams['role'] ?? '';
         if ($firstName && $email) {
             $db = (new Db())->getConnect();
             $user = new Users($db, [
                 'firstName' => $firstName,
-                'email' => $email,
                 'lastName' => $lastName,
+                'email' => $email,
+                'role' => $role,
                 'password' => $password
             ]);
             if ($user = $user->saveNew()) {

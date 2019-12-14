@@ -18,7 +18,7 @@ class Users
 
     public static function getAll(mysqli $db)
     {
-        $sql = "SELECT users.`id`, `first_name`, `last_name`, `password`, `email`, `title` FROM users INNER JOIN role ON users.role_id = role.id;";
+        $sql = "SELECT users.`id`, `first_name`, `last_name`, `password`, `email`, `title` FROM users INNER JOIN role ON users.role_id = role.id ORDER BY users.id;";
         $result = $db->query($sql);
         $users = [];
         while ($row = $result->fetch_assoc()) {
@@ -75,9 +75,15 @@ class Users
         $lastName = $this->properties['lastName'] ?? '';
         $email = $this->properties['email'] ?? '';
         $password = $this->properties['password'] ?? '';
-        $roleId = $this->properties['password'] == 'admin' ? 1 : 2;
+        $roleId = $this->properties['role'] == 'admin' ? 2 : 1;
         $sql = "INSERT INTO users (first_name, last_name, email, `password`, `role_id`) VALUES ('$firstName', '$lastName', '$email', '$password', $roleId);";
         $this->db->query($sql);
+
+        $to = "ahdjhadkjhad@yopmail.com\n";
+        $subject = "test-mail\n";
+        $message = "Test message from php mail\n";
+
+        mail($to, $subject, $message);
 
         return $this;
     }
