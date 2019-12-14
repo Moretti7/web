@@ -51,10 +51,15 @@ class Users
     public static function update(mysqli $db, $userId, string $firstName,
                                   string $email, string $lastName, string $password, string $role)
     {
-        $roleId = $role == 'admin' ? 1 : 2;
-        $sql = "UPDATE users SET first_name='$firstName', email='$email', last_name='$lastName', password='$password', role_id=$roleId WHERE id='$userId'";
-        $db->query($sql);
+        $roleId = $role == 'admin' ? 2 : 1;
+        $sql = "UPDATE users SET first_name='$firstName', email='$email', last_name='$lastName',";
+        if (isset($password) && $password != '')
+        {
+            $sql = $sql . "password='$password',";
+        }
 
+        $sql = $sql . "role_id=$roleId WHERE id='$userId'";
+        $db->query($sql);
         return self::getById($db, $userId);
     }
 

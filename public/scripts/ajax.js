@@ -8,10 +8,6 @@ function ajax(ajaxObj) {
         ajaxObj.success(xhr.response);
     }
 
-    if (ajaxObj.method == 'DELETE') {
-        xhr.setRequestHeader('Content-Type', ajaxObj.contentType);
-    }   
-
     console.log(`data: ${ajaxObj.data}`);
     xhr.send(ajaxObj.data);
 }

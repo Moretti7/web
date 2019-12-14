@@ -95,7 +95,7 @@ class UserController extends BasicController
 
         if ($firstName && $email) {
             if ($user = Users::update($db, $userId, $firstName, $email, $lastName, $password, $role)) {
-                return $this->response('Data updated.', 200);
+                return $this->response($user, 200);
             }
         }
         return $this->response("Update error", 500);

@@ -43,7 +43,6 @@ function initId() {
                     toggleUserData(userPopup);
                     setUserData(user);
                     showSaveButton(logginedUser, id);
-                    showPhotoElement(logginedUser, id);
                     showDeleteButton(logginedUser, id);
                 }
             })
@@ -93,14 +92,16 @@ function showSaveButton(logginedUser, id) {
         let data = buildUser(id);
 
         ajax({
-            url: `/api/user`,
+            url: `/api/users/${id}?${data}`,
             method: 'PUT',
-            data: data,
+            data: '',
             success: (response) => {
                 loadUsers();
                 let user = JSON.parse(response);
-                localStorage.setItem('user', response);
-                document.querySelector('.user-name').innerHTML = `${user.firstName} ${user.lastName}`;
+                if (user.id === JSON.parse(localStorage.getItem('user')).id) {
+                    localStorage.setItem('user', response);
+                    document.querySelector('.user-name').innerHTML = `${user.firstName} ${user.lastName}`;
+                }
                 toggleUserData('.user-popup');
             }
         })
@@ -125,7 +126,7 @@ function buildUser(id) {
     ifPresent(surname, () => params += `&lastName=${surname}`);
     ifPresent(role, () => params += `&role=${role}`);
 
-    return JSON.stringify(user);
+    return params;
 }
 
 function prepareDataForUpdate(id) {
@@ -270,7 +271,7 @@ function addRegisterEventListener() {
         let email = document.querySelector('.register-email').value;
 
         ajax({
-            url: '/api/user.php',
+            url: '/api/users',
             method: 'POST',
             data: prepareUser(),
             success: (response) => {
@@ -290,13 +291,20 @@ function prepareUser() {
     let surname = document.querySelector('.surname').value;
     let role = document.querySelector('.role').value;
 
-    params += `&email=${email}`;
+    params += `email=${email}`;
     params += `&password=${password}`;
     params += `&firstName=${name}`;
     params += `&lastName=${surname}`;
     params += `&role=${role}`;
 
-    return params;
+    let form = new FormData();
+    form.append("email", email);
+    form.append("password", password);
+    form.append("firstName", name);
+    form.append("lastName", surname);
+    form.append("role", role);
+
+    return form;
 }
 
 function prepareForm() {
