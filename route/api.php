@@ -1,6 +1,5 @@
 <?php
 require_once './app/Controllers/UserController.php';
-//require_once './app/Controllers/RoleController.php';
 
 class Route
 {
@@ -43,9 +42,6 @@ class Route
 			case 'users':
 			  $controller = new UserController($this->method, $this->requestParams);
 			break;
-//			case 'roles':
-//			  $controller = new RoleController($this->method,$this->requestParams);
-//			break;
 			default:
 			 $controller = new UserController($this->method, $this->requestParams);
 	   }

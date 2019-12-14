@@ -50,13 +50,17 @@ class UserController extends Controller
      */
     public function create()
     {
-        $name = $this->requestParams['name'] ?? '';
+        $firstName = $this->requestParams['firstName'] ?? '';
+        $lastName = $this->requestParams['$lastName'] ?? '';
         $email = $this->requestParams['email'] ?? '';
-        if ($name && $email) {
+        $password = $this->requestParams['password'] ?? '';
+        if ($firstName && $email) {
             $db = (new Db())->getConnect();
             $user = new Users($db, [
-                'name' => $name,
-                'email' => $email
+                'firstName' => $firstName,
+                'email' => $email,
+                'lastName' => $lastName,
+                'password' => $password
             ]);
             if ($user = $user->saveNew()) {
                 return $this->response('Data saved.', 200);
@@ -82,12 +86,14 @@ class UserController extends Controller
             return $this->response("User with id=$userId not found", 404);
         }
 
-        $name = $this->requestParams['name'] ?? '';
+        $firstName = $this->requestParams['firstName'] ?? '';
+        $lastName = $this->requestParams['lastName'] ?? '';
         $email = $this->requestParams['email'] ?? '';
+        $password = $this->requestParams['password'] ?? '';
+        $role = $this->requestParams['role'] ?? '';
 
-        echo "name=$name; email=$email \n\n\n\n";
-        if ($name && $email) {
-            if ($user = Users::update($db, $userId, $name, $email)) {
+        if ($firstName && $email) {
+            if ($user = Users::update($db, $userId, $firstName, $email, $lastName, $password, $role)) {
                 return $this->response('Data updated.', 200);
             }
         }

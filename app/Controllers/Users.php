@@ -49,10 +49,11 @@ class Users
         return $user;
     }
 
-    public static function update(mysqli $db, $userId, string $name, string $email)
+    public static function update(mysqli $db, $userId, string $firstName,
+                                  string $email, string $lastName, string $password, string $role)
     {
-        echo "userId=$userId; name=$name; email=$email \n\n\n\n";
-        $sql = "UPDATE users SET first_name='$name', email='$email' WHERE id='$userId'";
+        $roleId = $role == 'admin' ? 1 : 2;
+        $sql = "UPDATE users SET first_name='$firstName', email='$email', last_name='$lastName', password='$password', role_id=$roleId WHERE id='$userId'";
         $db->query($sql);
 
         return self::getById($db, $userId);
@@ -66,10 +67,12 @@ class Users
 
     public function saveNew()
     {
-        $name = $this->properties['name'];
-        $email = $this->properties['email'];
-
-        $sql = "INSERT INTO users (first_name, last_name, email, `password`, `role_id`) VALUES ('$name', 'placeholder', '$email', 'placeholder', 2);";
+        $firstName = $this->properties['firstName'] ?? '';
+        $lastName = $this->properties['lastName'] ?? '';
+        $email = $this->properties['email'] ?? '';
+        $password = $this->properties['password'] ?? '';
+        $roleId = $this->properties['password'] == 'admin' ? 1 : 2;
+        $sql = "INSERT INTO users (first_name, last_name, email, `password`, `role_id`) VALUES ('$firstName', '$lastName', '$email', '$password', $roleId);";
         $this->db->query($sql);
 
         return $this;
