@@ -1,3 +1,13 @@
+Options +FollowSymLinks
+IndexIgnore */* #Options -Indexes
 RewriteEngine on
-RewriteRule ^([\w/]+)/$ $1
-RewriteRule ^([\w/]+)(\??[\w%=&\@]*)$ $1.php$2
+
+# Перенаправление с ДОМЕН на ДОМЕН/api
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^(.*)$ /api/$1 [R=301]
+
+#Если URI начинается с api/ то перенаправлять все запросы на index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ /index.php
